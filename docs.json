@@ -3,9 +3,9 @@
     "theme": "mint",
     "name": "Deflect",
     "colors": {
-        "primary": "#16A34A",
+        "primary": "#007FFF",
         "light": "#007FFF",
-        "dark": "#15803D"
+        "dark": "#007FFF"
     },
     "favicon": "/favicon.svg",
     "navigation": {
@@ -16,7 +16,9 @@
                     {
                         "group": "Get Started",
                         "pages": [
-                            "api-reference/introduction"
+                            "get_started/introduction",
+                            "get_started/defense_action",
+                            "get_started/auth"
                         ]
                     },
                     {
