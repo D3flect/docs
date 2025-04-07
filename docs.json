@@ -11,29 +11,10 @@
     "navigation": {
         "tabs": [
             {
-                "tab": "Guides",
+                "tab": "Documentation",
                 "groups": [
                     {
                         "group": "Get Started",
-                        "pages": [
-                            "introduction",
-                            "authenthication",
-                            "sdks"
-                        ]
-                    },
-                    {
-                        "group": "Endpoints",
-                        "pages": [
-                            "essentials/verdict"
-                        ]
-                    }
-                ]
-            },
-            {
-                "tab": "API Reference",
-                "groups": [
-                    {
-                        "group": "API Documentation",
                         "pages": [
                             "api-reference/introduction"
                         ]
