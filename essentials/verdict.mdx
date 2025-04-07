@@ -1,0 +1,92 @@
+---
+title: 'Bot Verdict'
+description: 'Send us your user's session token and receive a bot verdict and session information'
+icon: 'code'
+---
+
+### 📨 Request
+
+**Endpoint:**
+```
+POST https://api.deflect.bot/verify
+```
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "api_key": "your-api-key",
+  "token": "user-session-token",
+  "email": "optional@example.com"
+}
+```
+
+> 🔑 `email` is optional, but including it will enrich the response.
+
+---
+
+### ✅ Successful Response (`200 OK`)
+
+```json
+{
+  "success": true,
+  "message": "Verification complete",
+  "device": {
+    "fingerprint": "abc123",
+    "user_agent": "Mozilla/5.0...",
+    "languages": "en-US,en",
+    "timezone": "America/New_York",
+    "os": "macOS",
+    "is_mobile": false
+  },
+  "verdict": {
+    "can_pass": true
+  },
+  "ip": {
+    "address": "203.0.113.42",
+    "type": "ipv4",
+    "is_datacenter": false,
+    "is_proxy": false,
+    "is_tor": false,
+    "is_vpn": false,
+    "is_threat": false,
+    "is_bogon": false,
+    "asn": "AS15169",
+    "asn_number": 15169
+  },
+  "location": {
+    "city": "San Francisco",
+    "postal_code": "94107",
+    "country": "US",
+    "continent": "NA",
+    "latitude": 37.7749,
+    "longitude": -122.4194
+  },
+  "email": {
+    "created_at": "2022-01-01T00:00:00Z",
+    "expires_at": "2024-01-01T00:00:00Z",
+    "registrant": "Example Inc.",
+    "registrar": "NameCheap",
+    "nameservers": ["ns1.example.com", "ns2.example.com"],
+    "spf_record": "v=spf1 include:_spf.example.com ~all",
+    "dkim_record": "v=DKIM1; k=rsa; p=...",
+    "dmarc_record": "v=DMARC1; p=none; rua=mailto:dmarc@example.com",
+    "mx_record": "mx.example.com"
+  },
+  "session": {
+    "started_at": "2025-04-07T12:00:00Z",
+    "finished_at": "2025-04-07T12:30:00Z"
+  }
+}
+```
+
+---
+
+### ❌ Error Responses
+
+- `400 Bad Request` – Missing fields in the request body (like `token` or `api_key`)
+- `401 Unauthorized` – Invalid or missing `api_key`
