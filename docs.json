@@ -4,7 +4,7 @@
     "name": "Deflect",
     "colors": {
         "primary": "#16A34A",
-        "light": "#007FFFF",
+        "light": "#007FFF",
         "dark": "#15803D"
     },
     "favicon": "/favicon.svg",
