@@ -1,8 +1,8 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "OpenAPI Plant Store",
-        "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+        "title": "Deflect API",
+        "description": "API endpoints for Deflect Antibot",
         "license": {
             "name": "MIT"
         },
@@ -27,7 +27,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/NewPlant"
+                                "$ref": "#/components/schemas/Verdict"
                             }
                         }
                     },
@@ -35,7 +35,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "plant response",
+                        "description": "Successful response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -61,41 +61,27 @@
     "webhooks": {},
     "components": {
         "schemas": {
-            "Plant": {
+            "Verdict": {
                 "required": [
-                    "name"
+                    "api_key",
+                    "token"
                 ],
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "description": "The name of the plant",
+                    "api_key": {
+                        "description": "Your Deflect API Key",
                         "type": "string"
                     },
-                    "tag": {
-                        "description": "Tag to specify the type",
+                    "token": {
+                        "description": "The user session token from the protected endpoint.",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The email of your user. Only needed for register defense action.",
                         "type": "string"
                     }
+
                 }
-            },
-            "NewPlant": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/Plant"
-                    },
-                    {
-                        "required": [
-                            "id"
-                        ],
-                        "type": "object",
-                        "properties": {
-                            "id": {
-                                "description": "Identification number of the plant",
-                                "type": "integer",
-                                "format": "int64"
-                            }
-                        }
-                    }
-                ]
             },
             "Error": {
                 "required": [
