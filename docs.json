@@ -20,6 +20,14 @@
                         ]
                     },
                     {
+                        "group": "Client-Side",
+                        "pages": [
+                            "client-side/javascript",
+                          "client-side/shopify",
+                          "client-side/wordpress"
+                        ]
+                    },
+                    {
                         "group": "Endpoints",
                         "pages": [
                             "api-reference/endpoint/verdict"
