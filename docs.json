@@ -22,7 +22,7 @@
                         ]
                     },
                     {
-                        "group": "Essentials",
+                        "group": "Endpoints",
                         "pages": [
                             "essentials/verdict"
                         ]
