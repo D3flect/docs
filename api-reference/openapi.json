@@ -13,11 +13,6 @@
             "url": "https://api.deflect.bot"
         }
     ],
-    "security": [
-        {
-            "bearerAuth": []
-        }
-    ],
     "paths": {
         "/verify": {
             "post": {

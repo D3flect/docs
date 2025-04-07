@@ -1,10 +1,10 @@
 {
     "$schema": "https://mintlify.com/docs.json",
-    "theme": "willow",
+    "theme": "mint",
     "name": "Deflect",
     "colors": {
         "primary": "#16A34A",
-        "light": "#07C983",
+        "light": "#007FFFF",
         "dark": "#15803D"
     },
     "favicon": "/favicon.svg",
@@ -20,7 +20,7 @@
                         ]
                     },
                     {
-                        "group": "Endpoint Examples",
+                        "group": "Endpoints",
                         "pages": [
                             "api-reference/endpoint/verdict"
                         ]
