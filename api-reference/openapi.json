@@ -34,17 +34,17 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Plant"
+                                    "$ref": "#/components/schemas/VerdictResponse"
                                 }
                             }
                         }
                     },
-                    "400": {
+                    "401": {
                         "description": "unexpected error",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Error"
+                                    "$ref": "#/components/schemas/UnauthorizedError"
                                 }
                             }
                         }
@@ -59,7 +59,8 @@
             "Verdict": {
                 "required": [
                     "api_key",
-                    "token"
+                    "token",
+                    "action_id"
                 ],
                 "type": "object",
                 "properties": {
@@ -67,17 +68,85 @@
                         "description": "Your Deflect API Key",
                         "type": "string"
                     },
-                    "token": {
-                        "description": "The user session token from the protected endpoint.",
+                    "action_id": {
+                        "description": "Your Deflect Action ID",
                         "type": "string"
                     },
-                    "email": {
-                        "description": "The email of your user. Only needed for register defense action.",
+
+                    "token": {
+                        "description": "The user session token from the protected endpoint.",
                         "type": "string"
                     }
 
                 }
             },
+            "VerdictResponse": {
+            "type": "object",
+            "properties": {
+                "success": { "type": "boolean" },
+                "verdict": {
+                "type": "object",
+                "properties": {
+                    "can_pass": { "type": "boolean" }
+                }
+                },
+                "device": {
+                "type": "object",
+                "properties": {
+                    "fingerprint": { "type": "string" },
+                    "user_agent": { "type": "string" },
+                    "languages": { "type": "string" },
+                    "timezone": { "type": "string" },
+                    "os": { "type": "string" },
+                    "is_mobile": { "type": "boolean" }
+                }
+                },
+                "ip": {
+                "type": "object",
+                "properties": {
+                    "address": { "type": "string" },
+                    "type": { "type": "string" },
+                    "is_datacenter": { "type": "boolean" },
+                    "is_proxy": { "type": "boolean" },
+                    "is_tor": { "type": "boolean" },
+                    "is_vpn": { "type": "boolean" },
+                    "is_threat": { "type": "boolean" },
+                    "is_bogon": { "type": "boolean" },
+                    "asn": { "type": "string" },
+                    "asn_number": { "type": "integer" }
+                }
+                },
+                "location": {
+                "type": "object",
+                "properties": {
+                    "city": { "type": "string" },
+                    "postal_code": { "type": "string" },
+                    "country": { "type": "string" },
+                    "continent": { "type": "string" },
+                    "latitude": { "type": "number" },
+                    "longitude": { "type": "number" }
+                }
+                },
+                "session": {
+                "type": "object",
+                "properties": {
+                    "started_at": { "type": "string", "format": "date-time" },
+                    "finished_at": { "type": "string", "format": "date-time" }
+                }
+                }
+            },
+            "required": []
+            },
+
+            "UnauthorizedError": {
+            "type": "object",
+            "properties": {
+                "success": { "type": "boolean", "example": false },
+                "message": { "type": "string", "example": "invalid_token" }
+            },
+            "required": ["success", "message"]
+            },
+
             "Error": {
                 "required": [
                     "error",

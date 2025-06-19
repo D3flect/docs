@@ -3,3 +3,65 @@ title: 'Javascript SDK'
 description: 'Guide on how to add our SDK in your client-side code.'
 ---
 
+import { CodeBlock } from 'nextra/components'
+
+Deflect's JavaScript SDK allows you to integrate bot protection easily into any frontend application including **React**, **Vue**, **Next.js**, or plain JavaScript.
+
+## 📦 Installation
+
+### ✅ Recommended: CDN (Auto-Updates)
+
+Add the script tag directly to your HTML file:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@deflectbot/deflect-sdk/dist/index.min.js"></script>
+```
+
+This will always serve the latest version of the SDK.
+
+---
+
+### 📦 NPM (Manual Updates)
+
+If you prefer using a package manager:
+
+```bash
+npm install @deflectbot/deflect-sdk
+```
+
+Then import it:
+
+```js
+import Deflect from "@deflectbot/deflect-sdk";
+```
+
+## ⚙️ Configuration
+
+Configure the SDK using your `siteKey`:
+
+```js
+Deflect.configure({
+  siteKey: "YOUR_SITE_KEY", // Required
+  extraArgs: { mode: "strict" }, // Optional
+  forceRefresh: true,           // Optional
+});
+```
+
+You should call this early in your app's lifecycle (e.g. before making protected API calls).
+
+## 🧠 Solve a Challenge
+
+Call this when you want to verify a session before taking action (e.g. login, register, payment):
+
+```js
+try {
+  const token = await Deflect.solveChallenge();
+  console.log("✅ Token received:", token);
+
+  // Include this token in your backend API call
+} catch (error) {
+  console.error("❌ Failed to solve challenge:", error);
+}
+```
+
+Next continue by verifying the token using [Verdict Endpoint](./api-reference/endpoint/verdict)
