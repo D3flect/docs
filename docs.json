@@ -1,78 +1,83 @@
 {
-    "$schema": "https://mintlify.com/docs.json",
-    "theme": "mint",
-    "name": "Deflect",
-    "colors": {
-        "primary": "#007FFF",
-        "light": "#007FFF",
-        "dark": "#007FFF"
-    },
-    "favicon": "/favicon.svg",
-    "navigation": {
-        "tabs": [
-            {
-                "tab": "Documentation",
-                "groups": [
-                    {
-                        "group": "Get Started",
-                        "pages": [
-                            "get_started/introduction",
-                            "get_started/defense_action",
-                            "get_started/auth"
-                        ]
-                    },
-                    {
-                        "group": "Client-Side",
-                        "pages": [
-                            "client-side/javascript",
-                          "client-side/shopify",
-                          "client-side/wordpress"
-                        ]
-                    },
-                    {
-                        "group": "Endpoints",
-                        "pages": [
-                            "api-reference/endpoint/verdict"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "global": {
-            "anchors": [
-                {
-                    "anchor": "Discord",
-                    "href": "https://discord.com/invite/deflect",
-                    "icon": "discord"
-                },
-                {
-                    "anchor": "Blog",
-                    "href": "https://deflect.bot/blog",
-                    "icon": "newspaper"
-                }
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Deflect",
+  "colors": {
+    "primary": "#007FFF",
+    "light": "#007FFF",
+    "dark": "#007FFF"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "get_started/introduction",
+              "get_started/defense_action",
+              "get_started/auth"
             ]
+          },
+          {
+            "group": "Client-Side",
+            "pages": [
+              "client-side/javascript",
+              "client-side/shopify",
+              "client-side/wordpress"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": ["api-reference/endpoint/verdict"]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Discord",
+          "href": "https://discord.gg/WDtxgkXtar",
+          "icon": "discord"
+        },
+        {
+          "anchor": "LinkedIn",
+          "href": "https://www.linkedin.com/company/deflectbot",
+          "icon": "linkedin"
+        },
+        {
+          "anchor": "X",
+          "href": "https://x.com/deflectbot",
+          "icon": "x-twitter"
         }
-    },
-    "logo": {
-        "light": "/logo/defectlogo.svg",
-        "dark": "/logo/defectlogo.svg"
-    },
-    "navbar": {
-        "links": [
-            {
-                "label": "Support",
-                "href": "mailto:hello@deflect.bot"
-            }
-        ],
-        "primary": {
-            "type": "button",
-            "label": "Dashboard",
-            "href": "https://deflect.bot/dashboard"
-        }
-    },
-    "footer": {
-        "socials": {
-            "discord": "https://discord.com/invite/deflect"
-        }
+      ]
     }
+  },
+  "logo": {
+    "light": "/logo/defectlogo.svg",
+    "dark": "/logo/defectlogo.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:hello@deflect.bot"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://deflect.bot/dashboard"
+    }
+  },
+  "footer": {
+    "socials": {
+      "discord": "https://discord.gg/WDtxgkXtar",
+      "x": "https://x.com/deflectbot",
+      "linkedin": "https://www.linkedin.com/company/deflectbot"
+    }
+  }
 }
