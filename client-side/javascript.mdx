@@ -1,67 +1,151 @@
 ---
-title: 'Javascript SDK'
-description: 'Guide on how to add our SDK in your client-side code.'
+title: "JavaScript SDK"
+description: "Integrate Deflect bot protection into your client-side application"
 ---
 
-import { CodeBlock } from 'nextra/components'
+Deflect's JavaScript SDK allows you to integrate bot protection seamlessly into any frontend application including **React**, **Vue**, **Next.js**, or plain JavaScript.
 
-Deflect's JavaScript SDK allows you to integrate bot protection easily into any frontend application including **React**, **Vue**, **Next.js**, or plain JavaScript.
+## Installation
 
-## 📦 Installation
-
-### ✅ Recommended: CDN (Auto-Updates)
+### CDN (Recommended)
 
 Add the script tag directly to your HTML file:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@deflectbot/deflect-sdk/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@deflectbot/deflect-sdk@latest/dist/index.min.js"></script>
 ```
 
-This will always serve the latest version of the SDK.
+Use `@latest` to always get the latest version, or specify a version with `@deflectbot/deflect-sdk@x.x.x`.
 
----
-
-### 📦 NPM (Manual Updates)
+### NPM/Yarn
 
 If you prefer using a package manager:
+
+#### npm
 
 ```bash
 npm install @deflectbot/deflect-sdk
 ```
 
-Then import it:
+#### yarn
+
+```bash
+yarn add @deflectbot/deflect-sdk
+```
+
+Then import it in your JavaScript:
 
 ```js
 import Deflect from "@deflectbot/deflect-sdk";
 ```
 
-## ⚙️ Configuration
+## Quick Start
 
-Configure the SDK using your `siteKey`:
+### 1. Configure the SDK
+
+Configure Deflect with your Action ID (get this from your dashboard):
 
 ```js
 Deflect.configure({
-  actionId: "YOUR_ACTION_ID", // Required
-  extraArgs: { mode: "strict" }, // Optional
-  forceRefresh: true,           // Optional
+  actionId: "YOUR_ACTION_ID", // Required - get from dashboard
 });
 ```
 
-You should call this early in your app's lifecycle (e.g. before making protected API calls).
+Call this once early in your app's lifecycle, before making any protected API calls.
 
-## 🧠 Solve a Challenge
+### 2. Get a token for protected requests
 
-Call this when you want to verify a session before taking action (e.g. login, register, payment):
+When you need to make a request to a protected endpoint (login, register, payment, etc.):
 
 ```js
-try {
-  const token = await Deflect.solveChallenge();
-  console.log("✅ Token received:", token);
+const token = await Deflect.getToken(); // Returns token as string
 
-  // Include this token in your backend API call
-} catch (error) {
-  console.error("❌ Failed to solve challenge:", error);
-}
+// Include this token in your API request
+fetch("/api/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    username: "user@example.com",
+    password: "password123",
+    deflect_token: token, // Include the token
+  }),
+});
 ```
 
-Next continue by verifying the token using [Verdict Endpoint](/api-reference/endpoint/verdict)
+### 3. Form Helper (Optional)
+
+If you're using HTML forms, you can use the helper function:
+
+```html
+<form
+  action="/login"
+  method="POST"
+  onsubmit="return Deflect.injectToken(event)"
+>
+  <input name="username" />
+  <input name="password" type="password" />
+  <button type="submit">Login</button>
+</form>
+```
+
+The `injectToken()` function will automatically fetch a token and inject it as a hidden input named `deflect_token` into your form.
+
+## Complete Example
+
+Here's a full working example:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@deflectbot/deflect-sdk@latest/dist/index.min.js"></script>
+  </head>
+  <body>
+    <form id="loginForm">
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+
+    <script>
+      // 1. Configure Deflect
+      Deflect.configure({
+        actionId: "YOUR_ACTION_ID",
+      });
+
+      // 2. Handle form submission
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          try {
+            // Get token from Deflect
+            const token = await Deflect.getToken();
+
+            // Make your API request with the token
+            const formData = new FormData(e.target);
+            const response = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: formData.get("email"),
+                password: formData.get("password"),
+                deflect_token: token,
+              }),
+            });
+
+            const result = await response.json();
+            console.log("Login result:", result);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        });
+    </script>
+  </body>
+</html>
+```
+
+## Next Steps
+
+After implementing the client-side SDK, you'll need to verify the tokens on your backend using the [Verdict API](/api-reference/endpoint/verdict).

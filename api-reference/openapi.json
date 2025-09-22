@@ -1,174 +1,170 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-        "title": "Deflect API",
-        "description": "API endpoints for Deflect Antibot",
-        "license": {
-            "name": "MIT"
-        },
-        "version": "1.0.0"
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Deflect API",
+    "description": "API endpoints for Deflect Antibot",
+    "license": {
+      "name": "MIT"
     },
-    "servers": [
-        {
-            "url": "https://api.deflect.bot"
-        }
-    ],
-    "paths": {
-        "/verify": {
-            "post": {
-                "description": "Fetch bot verdict for a user session token",
-                "requestBody": {
-                    "description": "Plant to add to the store",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Verdict"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "200": {
-                        "description": "Successful response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/VerdictResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "unexpected error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthorizedError"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "webhooks": {},
-    "components": {
-        "schemas": {
-            "Verdict": {
-                "required": [
-                    "api_key",
-                    "token",
-                    "action_id"
-                ],
-                "type": "object",
-                "properties": {
-                    "api_key": {
-                        "description": "Your Deflect API Key",
-                        "type": "string"
-                    },
-                    "action_id": {
-                        "description": "Your Deflect Action ID",
-                        "type": "string"
-                    },
-
-                    "token": {
-                        "description": "The user session token from the protected endpoint.",
-                        "type": "string"
-                    }
-
-                }
-            },
-            "VerdictResponse": {
-            "type": "object",
-            "properties": {
-                "success": { "type": "boolean" },
-                "verdict": {
-                "type": "object",
-                "properties": {
-                    "can_pass": { "type": "boolean" }
-                }
-                },
-                "device": {
-                "type": "object",
-                "properties": {
-                    "fingerprint": { "type": "string" },
-                    "user_agent": { "type": "string" },
-                    "languages": { "type": "string" },
-                    "timezone": { "type": "string" },
-                    "os": { "type": "string" },
-                    "is_mobile": { "type": "boolean" }
-                }
-                },
-                "ip": {
-                "type": "object",
-                "properties": {
-                    "address": { "type": "string" },
-                    "type": { "type": "string" },
-                    "is_datacenter": { "type": "boolean" },
-                    "is_proxy": { "type": "boolean" },
-                    "is_tor": { "type": "boolean" },
-                    "is_vpn": { "type": "boolean" },
-                    "is_threat": { "type": "boolean" },
-                    "is_bogon": { "type": "boolean" },
-                    "asn": { "type": "string" },
-                    "asn_number": { "type": "integer" }
-                }
-                },
-                "location": {
-                "type": "object",
-                "properties": {
-                    "city": { "type": "string" },
-                    "postal_code": { "type": "string" },
-                    "country": { "type": "string" },
-                    "continent": { "type": "string" },
-                    "latitude": { "type": "number" },
-                    "longitude": { "type": "number" }
-                }
-                },
-                "session": {
-                "type": "object",
-                "properties": {
-                    "started_at": { "type": "string", "format": "date-time" },
-                    "finished_at": { "type": "string", "format": "date-time" }
-                }
-                }
-            },
-            "required": []
-            },
-
-            "UnauthorizedError": {
-            "type": "object",
-            "properties": {
-                "success": { "type": "boolean", "example": false },
-                "message": { "type": "string", "example": "invalid_token" }
-            },
-            "required": ["success", "message"]
-            },
-
-            "Error": {
-                "required": [
-                    "error",
-                    "message"
-                ],
-                "type": "object",
-                "properties": {
-                    "error": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "message": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer"
-            }
-        }
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.deflect.bot"
     }
+  ],
+  "paths": {
+    "/verify": {
+      "post": {
+        "description": "Fetch bot verdict for a user session token",
+        "requestBody": {
+          "description": "Plant to add to the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Verdict"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerdictResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {
+      "Verdict": {
+        "required": ["api_key", "token", "action_id"],
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "description": "Your Deflect API Key",
+            "type": "string"
+          },
+          "action_id": {
+            "description": "Your Deflect Action ID",
+            "type": "string"
+          },
+
+          "token": {
+            "description": "The user session token from the protected endpoint.",
+            "type": "string"
+          }
+        }
+      },
+      "VerdictResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "verdict": {
+            "description": "Contains the bot verdict for the user session",
+            "type": "object",
+            "properties": {
+              "can_pass": {
+                "type": "boolean",
+                "description": "Whether the user can pass the verification"
+              }
+            }
+          },
+          "device": {
+            "type": "object",
+            "properties": {
+              "fingerprint": { "type": "string" },
+              "user_agent": { "type": "string" },
+              "languages": { "type": "string" },
+              "timezone": { "type": "string" },
+              "os": { "type": "string" },
+              "is_mobile": { "type": "boolean" }
+            }
+          },
+          "ip": {
+            "type": "object",
+            "properties": {
+              "address": { "type": "string" },
+              "type": { "type": "string" },
+              "is_datacenter": { "type": "boolean" },
+              "is_proxy": { "type": "boolean" },
+              "is_tor": { "type": "boolean" },
+              "is_vpn": { "type": "boolean" },
+              "is_threat": { "type": "boolean" },
+              "is_bogon": { "type": "boolean" },
+              "asn": { "type": "string" },
+              "asn_number": { "type": "integer" }
+            }
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "city": { "type": "string" },
+              "postal_code": { "type": "string" },
+              "country": { "type": "string" },
+              "continent": { "type": "string" },
+              "latitude": { "type": "number" },
+              "longitude": { "type": "number" }
+            }
+          },
+          "session": {
+            "type": "object",
+            "properties": {
+              "started_at": { "type": "string", "format": "date-time" },
+              "finished_at": { "type": "string", "format": "date-time" }
+            }
+          }
+        },
+        "required": []
+      },
+
+      "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "invalid_token" }
+        },
+        "required": ["success", "message"]
+      },
+
+      "Error": {
+        "required": ["error", "message"],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
 }

@@ -22,7 +22,7 @@
             ]
           },
           {
-            "group": "Client-Side",
+            "group": "Client-Side SDKs",
             "pages": [
               "client-side/javascript",
               "client-side/shopify",
@@ -30,7 +30,7 @@
             ]
           },
           {
-            "group": "Endpoints",
+            "group": "API Reference",
             "pages": ["api-reference/endpoint/verdict"]
           }
         ]

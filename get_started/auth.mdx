@@ -1,13 +1,153 @@
 ---
-title: 'Authentication'
-description: 'Learn how to use your API key when sending requests.'
+title: "Authentication"
+description: "Set up your API keys and Action IDs for secure access"
 ---
 
+## Overview
 
-## Authentication
+Deflect uses two types of credentials to authenticate and authorize your requests:
 
-All API endpoints are authenticated using an API key, that you can include in the payload
+1. **API Key** - Authenticates your account (used on backend)
+2. **Action ID** - Identifies which Defense Action to use (used on frontend and backend)
 
-```json
-"api_key": "DFL-4GI5-592JG9-4929J"
+## Getting your credentials
+
+### 1. API Key (Backend authentication)
+
+Your API key authenticates your backend server with Deflect's API:
+
+1. Sign up at [deflect.bot](https://deflect.bot/regiser?ref=https://docs.deflect.bot)
+2. Go to your dashboard
+3. Navigate to "API Keys"
+4. Copy your API key (format: `dlfct_xxxxxxxxxx`)
+
+<Warning>
+  Keep your API key secret! Only use it on your backend server, never in
+  client-side code.
+</Warning>
+
+### 2. Action ID (Frontend configuration)
+
+Action IDs identify which Defense Action to use for protection:
+
+1. In your dashboard, go to "Defense Actions"
+2. Create a new Defense Action or select an existing one
+3. Copy the Action ID
+4. Use this ID in your frontend SDK configuration
+
+<Info>
+  Action IDs are safe to use in client-side code - they only specify which
+  protection profile to use.
+</Info>
+
+## Using your credentials
+
+### Frontend (Client-side SDK)
+
+```js
+// Only use Action ID in frontend code
+Deflect.configure({
+  actionId: "YOUR_ACTION_ID", // Safe to use client-side
+});
+
+const token = await Deflect.getToken();
 ```
+
+### Backend (Server-side verification)
+
+```js
+// Use both API Key and Action ID on backend
+const response = await fetch("https://api.deflect.bot/verify", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    api_key: "YOUR_API_KEY", // Secret - backend only
+    action_id: "YOUR_ACTION_ID", // Safe to share
+    token: token_from_frontend,
+  }),
+});
+```
+
+## Complete authentication flow
+
+Here's how the credentials work together:
+
+1. **Frontend**: Configure SDK with Action ID
+2. **Frontend**: Get token using `Deflect.getToken()`
+3. **Frontend**: Send token to your backend in API request
+4. **Backend**: Verify token with Deflect using API Key + Action ID
+5. **Backend**: Process request based on verification result
+
+```js
+// Frontend code
+Deflect.configure({ actionId: "action_abc123" });
+const token = await Deflect.getToken();
+
+fetch("/api/login", {
+  method: "POST",
+  body: JSON.stringify({
+    username: "user@example.com",
+    password: "password123",
+    deflect_token: token, // Send token to backend
+  }),
+});
+
+// Backend code (Node.js example)
+app.post("/api/login", async (req, res) => {
+  const { username, password, deflect_token } = req.body;
+
+  // Verify token with Deflect
+  const verification = await fetch("https://api.deflect.bot/verify", {
+    method: "POST",
+    body: JSON.stringify({
+      api_key: process.env.DEFLECT_API_KEY, // From environment
+      action_id: "action_abc123",
+      token: deflect_token,
+    }),
+  });
+
+  const result = await verification.json();
+
+  if (!result.verdict.can_pass) {
+    return res.status(403).json({ error: "Bot detected" });
+  }
+
+  // Continue with login logic...
+});
+```
+
+## Security best practices
+
+- **Never expose API keys** - Use environment variables on backend
+- **Validate all tokens** - Always verify tokens server-side before processing requests
+- **Use HTTPS** - Ensure all API calls are encrypted
+- **Rotate keys** - Regularly update your API keys in the dashboard
+- **Monitor usage** - Check your dashboard for unusual activity
+
+## Environment setup
+
+Set up your credentials securely:
+
+```bash
+# .env file (backend)
+DEFLECT_API_KEY=DFL-XXXX-XXXXXX-XXXXX
+```
+
+```js
+// Backend usage
+const apiKey = process.env.DEFLECT_API_KEY;
+```
+
+```js
+// Frontend configuration (can be in public code)
+Deflect.configure({
+  actionId: "action_abc123", // This is safe to hardcode
+});
+```
+
+## Next Steps
+
+- [JavaScript SDK Guide](/client-side/javascript) - Implement frontend protection
+- [API Reference](/api-reference/endpoint/verdict) - Detailed backend verification

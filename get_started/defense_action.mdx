@@ -1,13 +1,113 @@
 ---
-title: 'Defense Actions'
-description: 'Learn how to create a new Defense Action for your protected endpoints.'
+title: "Defense Actions"
+description: "Configure targeted protection for your specific endpoints"
 ---
-
 
 ## What are Defense Actions?
 
-**Defense Actions** are invisible bot protection mechanisms dynamically deployed on your endpoints — like `register`, `login`, `payment` and `more..`
+**Defense Actions** are customized protection profiles for different endpoints on your site. Each Action is tailored to the specific risks and requirements of that endpoint type.
 
-Each Defense Action is designed to respond to the specific threat model of its associated endpoint and that means that we check specific things for each one.
+Think of Defense Actions as security policies - you might want different protection levels for a login page versus a contact form.
 
-For example, Defense Action of type `register` allows you to send us the email and password used and we can tell you where the email provider is legit / if the password is in a public credentials leak and much more.
+## Why use different Defense Actions?
+
+Different endpoints have different risk profiles:
+
+- **Login pages** need to detect credential stuffing and account takeover attempts
+- **Registration forms** should check for fake emails and bulk account creation
+- **Payment pages** require the highest security against fraud
+- **Contact forms** need basic spam protection
+- **API endpoints** may need different rate limiting and validation
+
+## Common Defense Action Types
+
+### Login Protection
+
+- Detects credential stuffing attacks
+- Identifies suspicious login patterns
+- Protects against account takeover
+
+### Registration Protection
+
+- Validates email providers and domains
+- Detects bulk account creation
+- Checks for disposable email addresses
+- Identifies automated signups
+
+### Payment Protection
+
+- Maximum security for financial transactions
+- Advanced fraud detection
+- Enhanced device fingerprinting
+- Stricter IP reputation checks
+
+### API Protection
+
+- Rate limiting and abuse prevention
+- Bot traffic identification
+- Automated request detection
+
+## Setting up a Defense Action
+
+### 1. Create in Dashboard
+
+1. Log into your Deflect dashboard
+2. Navigate to "Defense Actions"
+3. Click "Create New Action"
+4. Select the appropriate type for your endpoint
+5. Configure protection settings
+6. Save and copy the Action ID
+
+### 2. Use in your code
+
+```js
+// Configure the SDK with your Action ID
+Deflect.configure({
+  actionId: "YOUR_ACTION_ID", // The ID from your dashboard
+});
+
+// Get token when needed
+const token = await Deflect.getToken();
+```
+
+### 3. Verify on backend
+
+```js
+// Send token to your backend for verification
+const verification = await fetch("https://api.deflect.bot/verify", {
+  method: "POST",
+  body: JSON.stringify({
+    api_key: "YOUR_API_KEY",
+    action_id: "YOUR_ACTION_ID", // Same Action ID
+    token: token,
+  }),
+});
+```
+
+## Multiple Defense Actions
+
+You can create multiple Defense Actions for different parts of your site:
+
+```js
+// Login page
+Deflect.configure({ actionId: "login_action_id" });
+
+// Registration page
+Deflect.configure({ actionId: "register_action_id" });
+
+// Payment page
+Deflect.configure({ actionId: "payment_action_id" });
+```
+
+## Best Practices
+
+- **Use specific Action types** - Don't use a generic action for specialized endpoints
+- **Test before deploying** - Verify your Defense Action works in staging first
+- **Monitor performance** - Check your dashboard for detection rates and false positives
+- **Update configurations** - Adjust settings based on your traffic patterns
+
+## Next Steps
+
+- [Authentication Setup](/get_started/auth) - Configure your API keys
+- [JavaScript SDK](/client-side/javascript) - Implement the client-side protection
+- [API Reference](/api-reference/endpoint/verdict) - Backend verification guide

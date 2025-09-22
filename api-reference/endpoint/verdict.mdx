@@ -1,4 +1,13 @@
 ---
-title: 'Get Bot Verdict'
-openapi: 'POST /verify'
+title: "Get Bot Verdict"
+openapi: "POST /verify"
 ---
+
+## Response Format
+
+The API returns detailed information about the request, including:
+
+- **Verdict** - Whether the request should be allowed (`can_pass: true/false`)
+- **Device information** - Browser details, fingerprint, user agent
+- **IP analysis** - Location, threat indicators, proxy/VPN detection
+- **Session data** - Timing and behavioral analysis
