@@ -1,170 +1,360 @@
 {
-  "openapi": "3.1.0",
-  "info": {
-    "title": "Deflect API",
-    "description": "API endpoints for Deflect Antibot",
-    "license": {
-      "name": "MIT"
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Deflect API",
+        "description": "API endpoints for Deflect Antibot",
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
     },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "https://api.deflect.bot"
-    }
-  ],
-  "paths": {
-    "/verify": {
-      "post": {
-        "description": "Fetch bot verdict for a user session token",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Verdict"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerdictResponse"
+    "servers": [
+        {
+            "url": "https://api.deflect.bot"
+        }
+    ],
+    "paths": {
+        "/verify": {
+            "post": {
+                "description": "Fetch bot verdict for a user session token",
+                "requestBody": {
+                    "description": "Plant to add to the store",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Verdict"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VerdictResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UnauthorizedError"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          },
-          "401": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
+        },
+        "/intelligence/email": {
+            "post": {
+                "description": "Validate and score an email address",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/EmailRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/EmailResponse" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/UnauthorizedError" }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {},
-  "components": {
-    "schemas": {
-      "Verdict": {
-        "required": ["api_key", "token", "action_id"],
-        "type": "object",
-        "properties": {
-          "api_key": {
-            "description": "Your Deflect API Key",
-            "type": "string"
-          },
-          "action_id": {
-            "description": "Your Deflect Action ID",
-            "type": "string"
-          },
-
-          "token": {
-            "description": "The user session token from the protected endpoint.",
-            "type": "string"
-          }
-        }
-      },
-      "VerdictResponse": {
-        "type": "object",
-        "properties": {
-          "success": { "type": "boolean" },
-          "verdict": {
-            "description": "Contains the bot verdict for the user session",
-            "type": "object",
-            "properties": {
-              "can_pass": {
-                "type": "boolean",
-                "description": "Whether the user can pass the verification"
-              }
-            }
-          },
-          "device": {
-            "type": "object",
-            "properties": {
-              "fingerprint": { "type": "string" },
-              "user_agent": { "type": "string" },
-              "languages": { "type": "string" },
-              "timezone": { "type": "string" },
-              "os": { "type": "string" },
-              "is_mobile": { "type": "boolean" }
-            }
-          },
-          "ip": {
-            "type": "object",
-            "properties": {
-              "address": { "type": "string" },
-              "type": { "type": "string" },
-              "is_datacenter": { "type": "boolean" },
-              "is_proxy": { "type": "boolean" },
-              "is_tor": { "type": "boolean" },
-              "is_vpn": { "type": "boolean" },
-              "is_threat": { "type": "boolean" },
-              "is_bogon": { "type": "boolean" },
-              "asn": { "type": "string" },
-              "asn_number": { "type": "integer" }
-            }
-          },
-          "location": {
-            "type": "object",
-            "properties": {
-              "city": { "type": "string" },
-              "postal_code": { "type": "string" },
-              "country": { "type": "string" },
-              "continent": { "type": "string" },
-              "latitude": { "type": "number" },
-              "longitude": { "type": "number" }
-            }
-          },
-          "session": {
-            "type": "object",
-            "properties": {
-              "started_at": { "type": "string", "format": "date-time" },
-              "finished_at": { "type": "string", "format": "date-time" }
-            }
-          }
         },
-        "required": []
-      },
-
-      "UnauthorizedError": {
-        "type": "object",
-        "properties": {
-          "success": { "type": "boolean", "example": false },
-          "message": { "type": "string", "example": "invalid_token" }
+        "/intelligence/phone": {
+            "post": {
+                "description": "Validate and enrich a phone number",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/PhoneRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/PhoneResponse" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/UnauthorizedError" }
+                            }
+                        }
+                    }
+                }
+            }
         },
-        "required": ["success", "message"]
-      },
-
-      "Error": {
-        "required": ["error", "message"],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
+        "/intelligence/ip": {
+            "post": {
+                "description": "Check IP reputation and geolocation",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/IpRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/IpResponse" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/UnauthorizedError" }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
+    "webhooks": {},
+    "components": {
+        "schemas": {
+            "EmailRequest": {
+                "type": "object",
+                "required": ["api_key", "email"],
+                "properties": {
+                    "api_key": { "type": "string", "description": "Your Deflect API Key" },
+                    "email": { "type": "string", "format": "email" }
+                }
+            },
+            "EmailResponse": {
+                "type": "object",
+                "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "is_valid": { "type": "boolean" },
+                            "is_trusted": { "type": "boolean" },
+                            "trust_score": { "type": "number" },
+                            "has_aliasing": { "type": "boolean" },
+                            "normalized_email": { "type": "string" },
+                            "domain": { "type": "string" }
+                        }
+                    }
+                }
+            },
+            "PhoneRequest": {
+                "type": "object",
+                "required": ["api_key", "phone"],
+                "properties": {
+                    "api_key": { "type": "string", "description": "Your Deflect API Key" },
+                    "phone": { "type": "string", "description": "+E.164 phone number" }
+                }
+            },
+            "PhoneResponse": {
+                "type": "object",
+                "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "is_valid": { "type": "boolean" },
+                            "e164_format": { "type": "string" },
+                            "country_code": { "type": "string" },
+                            "country": { "type": "string" },
+                            "country_name": { "type": "string" },
+                            "number_type": { "type": "string" },
+                            "line_type": { "type": "string" },
+                            "carrier": { "type": "string" },
+                            "carrier_type": { "type": "string" },
+                            "risk_score": { "type": "number" },
+                            "is_disposable": { "type": "boolean" },
+                            "is_virtual": { "type": "boolean" },
+                            "is_threat": { "type": "boolean" },
+                            "is_spam": { "type": "boolean" },
+                            "last_updated": { "type": "string", "format": "date-time" }
+                        }
+                    }
+                }
+            },
+            "IpRequest": {
+                "type": "object",
+                "required": ["api_key", "ip"],
+                "properties": {
+                    "api_key": { "type": "string", "description": "Your Deflect API Key" },
+                    "ip": { "type": "string", "format": "ipv4" }
+                }
+            },
+            "IpResponse": {
+                "type": "object",
+                "properties": {
+                    "success": { "type": "boolean" },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "is_vpn": { "type": "boolean" },
+                            "is_datacenter_proxy": { "type": "boolean" },
+                            "is_residential_proxy": { "type": "boolean" },
+                            "is_bogon": { "type": "boolean" },
+                            "is_tor_node": { "type": "boolean" },
+                            "is_threat": { "type": "boolean" },
+                            "city": { "type": "string" },
+                            "postal_code": { "type": "string" },
+                            "country": { "type": "string" },
+                            "continent": { "type": "string" },
+                            "latitude": { "type": "number" },
+                            "longitude": { "type": "number" },
+                            "asn_number": { "type": "integer" },
+                            "asn_organization": { "type": "string" },
+                            "isp": { "type": "string" }
+                        }
+                    }
+                }
+            },
+            "Verdict": {
+                "required": [
+                    "api_key",
+                    "token",
+                    "action_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "api_key": {
+                        "description": "Your Deflect API Key",
+                        "type": "string"
+                    },
+                    "action_id": {
+                        "description": "Your Deflect Action ID",
+                        "type": "string"
+                    },
+
+                    "token": {
+                        "description": "The user session token from the protected endpoint.",
+                        "type": "string"
+                    }
+
+                }
+            },
+            "VerdictResponse": {
+            "type": "object",
+            "properties": {
+                "success": { "type": "boolean" },
+                "verdict": {
+                "type": "object",
+                "properties": {
+                    "can_pass": { "type": "boolean" }
+                }
+                },
+                "device": {
+                "type": "object",
+                "properties": {
+                    "fingerprint": { "type": "string" },
+                    "user_agent": { "type": "string" },
+                    "languages": { "type": "string" },
+                    "timezone": { "type": "string" },
+                    "os": { "type": "string" },
+                    "is_mobile": { "type": "boolean" }
+                }
+                },
+                "ip": {
+                "type": "object",
+                "properties": {
+                    "address": { "type": "string" },
+                    "type": { "type": "string" },
+                    "is_datacenter": { "type": "boolean" },
+                    "is_proxy": { "type": "boolean" },
+                    "is_tor": { "type": "boolean" },
+                    "is_vpn": { "type": "boolean" },
+                    "is_threat": { "type": "boolean" },
+                    "is_bogon": { "type": "boolean" },
+                    "asn": { "type": "string" },
+                    "asn_number": { "type": "integer" }
+                }
+                },
+                "location": {
+                "type": "object",
+                "properties": {
+                    "city": { "type": "string" },
+                    "postal_code": { "type": "string" },
+                    "country": { "type": "string" },
+                    "continent": { "type": "string" },
+                    "latitude": { "type": "number" },
+                    "longitude": { "type": "number" }
+                }
+                },
+                "session": {
+                "type": "object",
+                "properties": {
+                    "started_at": { "type": "string", "format": "date-time" },
+                    "finished_at": { "type": "string", "format": "date-time" }
+                }
+                }
+            },
+            "required": []
+            },
+
+            "UnauthorizedError": {
+            "type": "object",
+            "properties": {
+                "success": { "type": "boolean", "example": false },
+                "message": { "type": "string", "example": "invalid_token" }
+            },
+            "required": ["success", "message"]
+            },
+
+            "Error": {
+                "required": [
+                    "error",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
     }
-  }
 }

@@ -22,7 +22,7 @@
             ]
           },
           {
-            "group": "Client-Side SDKs",
+            "group": "Client-Side",
             "pages": [
               "client-side/javascript",
               "client-side/shopify",
@@ -30,8 +30,13 @@
             ]
           },
           {
-            "group": "API Reference",
-            "pages": ["api-reference/endpoint/verdict"]
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/endpoint/verdict",
+              "api-reference/intelligence/email",
+              "api-reference/intelligence/phone",
+              "api-reference/intelligence/ip"
+            ]
           }
         ]
       }
