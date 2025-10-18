@@ -99,6 +99,89 @@ Deflect.configure({ actionId: "register_action_id" });
 Deflect.configure({ actionId: "payment_action_id" });
 ```
 
+## Testing Defense Actions
+
+When developing and testing your integration locally, you can use special **test action IDs** that return predictable results without consuming API credits or triggering real challenges.
+
+### Test Action IDs
+
+Two special test action IDs are available:
+
+#### ✅ Success Test ID
+```
+t/FFFFFFFFFFFFF/111111111
+```
+- Always returns `can_pass: true`
+- Returns mock device, IP, location, and session data
+- Perfect for testing successful verification flows
+
+#### ❌ Failure Test ID
+```
+t/FFFFFFFFFFFFF/000000000
+```
+- Always returns `can_pass: false`
+- Returns mock device, IP, location, and session data
+- Perfect for testing failure/rejection flows
+
+### Using Test Action IDs
+
+```js
+// In your development environment
+Deflect.configure({
+  actionId: "t/FFFFFFFFFFFFF/111111111" // Success test ID
+});
+
+const token = await Deflect.getToken();
+
+// Verify on backend - always returns can_pass: true
+const response = await fetch("https://api.deflect.bot/verify", {
+  method: "POST",
+  body: JSON.stringify({
+    api_key: "YOUR_API_KEY",
+    action_id: "t/FFFFFFFFFFFFF/111111111",
+    token: token
+  })
+});
+```
+
+### Key Features
+
+- ✅ **Valid API Key Required**: You still need to provide a valid API key
+- ✅ **No Usage Tracking**: Test requests don't count toward your API usage limits
+- ✅ **Instant Response**: Bypasses all session validation and returns immediately
+- ✅ **Mock Data**: Returns consistent test data for development
+- ⚠️ **Development Only**: Do not use test action IDs in production
+
+### Example Response
+
+Test action IDs return mock data:
+
+```json
+{
+  "success": true,
+  "verdict": { "can_pass": true },
+  "device": {
+    "fingerprint": "FP-TEST",
+    "user_agent": "UA-TEST",
+    "timezone": "America/New_York"
+  },
+  "ip": {
+    "address": "127.0.0.1",
+    "is_datacenter": false,
+    "is_proxy": false,
+    "is_vpn": false,
+    "is_tor": false,
+    "is_threat": false
+  },
+  "location": {
+    "city": "Test City",
+    "country": "US"
+  }
+}
+```
+
+This allows you to test your integration end-to-end without spamming real challenges or consuming API credits during development.
+
 ## Best Practices
 
 - **Use specific Action types** - Don't use a generic action for specialized endpoints

@@ -11,3 +11,12 @@ The API returns detailed information about the request, including:
 - **Device information** - Browser details, fingerprint, user agent
 - **IP analysis** - Location, threat indicators, proxy/VPN detection
 - **Session data** - Timing and behavioral analysis
+
+## Testing
+
+For local development, use test action IDs that return predictable results without consuming API credits:
+
+- **Success**: `t/FFFFFFFFFFFFF/111111111` (always returns `can_pass: true`)
+- **Failure**: `t/FFFFFFFFFFFFF/000000000` (always returns `can_pass: false`)
+
+See the [Defense Actions guide](/get_started/defense_action#testing-defense-actions) for more details.
