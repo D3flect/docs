@@ -258,12 +258,23 @@
                         "description": "Your Deflect Action ID",
                         "type": "string"
                     },
-
                     "token": {
                         "description": "The user session token from the protected endpoint.",
                         "type": "string"
+                    },
+                    "id": {
+                        "description": "Optional user identifier for access control. Highly recommended to include!",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Optional user email address. Response will include email risk assessment.",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone_number": {
+                        "description": "Optional user phone number. Response will include phone risk assessment.",
+                        "type": "string"
                     }
-
                 }
             },
             "VerdictResponse": {
