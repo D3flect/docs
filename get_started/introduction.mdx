@@ -1,20 +1,21 @@
 ---
 title: "Introduction"
-description: "Protect your site from bots with Deflect in just 5 minutes"
+description: "Enterprise-grade bot and fraud protection for your applications"
 ---
 
 ![title](/images/hero2.png)
 
 ## Welcome to Deflect
 
-Deflect is an advanced antibot engine that protects your site from bots on any scale. Unlike traditional CAPTCHAs, Deflect works invisibly in the background to provide seamless bot protection.
+Deflect is an enterprise bot and fraud protection engine that shields your applications from automated abuse at any scale. Unlike traditional CAPTCHAs, Deflect works invisibly in the background — combining device fingerprinting, IP intelligence, behavioral analysis, and session tracking to deliver real-time verdicts without user friction.
 
 ## What Deflect protects against
 
+- **Account fraud**: Fake signups, credential stuffing, multi-accounting, account takeovers
 - **Automated attacks**: Headless browsers, scrapers, and automation tools
 - **Malicious traffic**: Proxy networks, VPNs, datacenter IPs, and Tor
-- **Account abuse**: Fake signups, credential stuffing, payment fraud
-- **Data scraping**: Content theft and competitive intelligence gathering
+- **Transaction abuse**: Payment fraud, promo abuse, refund fraud
+- **API abuse**: Scraping, content theft, and automated API exploitation
 
 ## How it works
 
@@ -23,40 +24,32 @@ Deflect uses multiple layers of detection working together:
 1. **Device fingerprinting** - Analyzes browser characteristics and behavior
 2. **IP reputation** - Checks against our global threat database (Deflect Atlas)
 3. **Behavioral analysis** - Monitors user interactions and patterns
-4. **Proof-of-work** - Requires computational challenges when suspicious
-5. **Integrity checks** - Validates browser environment authenticity
+4. **Session tracking** - Persistent cross-session device and user identity
+5. **Proof-of-work** - Requires computational challenges when suspicious
+6. **Integrity checks** - Validates browser environment authenticity
 
-## Quick Setup (5 minutes)
+## Getting Started
 
-Getting started with Deflect is simple:
+To get started with Deflect, [contact our sales team](mailto:sales@deflect.bot) or [book a demo](https://cal.com/deflect/15min). Once your account is set up, your team will receive API credentials and a guided onboarding session.
 
-### Step 1: Get your credentials
+### Integration overview
 
-1. Sign up at [deflect.bot](https://deflect.bot/regiser?ref=https://docs.deflect.bot) and get your API key
-2. Create a Defense Action for your protected endpoint (login, signup, etc.)
-3. Copy your Action ID from the dashboard
-
-### Step 2: Add the client-side SDK
-
-Add one line to your HTML or install via npm:
+#### 1. Add the client-side SDK
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@deflectbot/deflect-sdk@latest/dist/index.min.js"></script>
 ```
 
-### Step 3: Protect your frontend
-
-Use `@deflect-sdk@latest` to always use the latest version, or specify a version with `@deflect-sdk@x.x.x`.
+#### 2. Protect your frontend
 
 ```js
 Deflect.configure({ actionId: "YOUR_ACTION_ID" });
-const token = await Deflect.getToken(); // returns token as string
+const token = await Deflect.getToken();
 ```
 
-### Step 4: Verify on your backend
+#### 3. Verify on your backend
 
 ```js
-// Verify the token server-side
 const response = await fetch("https://api.deflect.bot/verify", {
   method: "POST",
   body: JSON.stringify({
@@ -66,8 +59,6 @@ const response = await fetch("https://api.deflect.bot/verify", {
   }),
 });
 ```
-
-That's it! Your endpoint is now protected from bots.
 
 ## Next steps
 

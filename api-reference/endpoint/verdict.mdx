@@ -7,10 +7,19 @@ openapi: "POST /verify"
 
 The API returns detailed information about the request, including:
 
-- **Verdict** - Whether the request should be allowed (`can_pass: true/false`)
+- **Verdict** - Whether the request should be allowed (`can_pass: true/false`) and whether the token had already been redeemed (`redeemed: true/false`)
 - **Device information** - Browser details, fingerprint, user agent
 - **IP analysis** - Location, threat indicators, proxy/VPN detection
 - **Session data** - Timing and behavioral analysis
+
+## Token Redemption
+
+Tokens can be verified more than once — replay does not produce an error. Use `verdict.redeemed` to detect it:
+
+- `verdict.redeemed: false` — first time this token has been verified
+- `verdict.redeemed: true` — this token was already verified by a previous `/verify` call
+
+If your defense action should treat a token as single-use (e.g. login, signup, payment), reject the request when `verdict.redeemed` is `true`.
 
 ## Testing
 

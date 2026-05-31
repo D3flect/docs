@@ -18,7 +18,7 @@
             "post": {
                 "description": "Fetch bot verdict for a user session token",
                 "requestBody": {
-                    "description": "Plant to add to the store",
+                    "description": "Verdict request with session token and optional user identification",
                     "content": {
                         "application/json": {
                             "schema": {
@@ -203,7 +203,7 @@
                             "is_virtual": { "type": "boolean" },
                             "is_threat": { "type": "boolean" },
                             "is_spam": { "type": "boolean" },
-                            "last_updated": { "type": "string", "format": "date-time" }
+                            "validation_error": { "type": "string", "description": "Validation error message, if any." }
                         }
                     }
                 }
@@ -263,7 +263,7 @@
                         "type": "string"
                     },
                     "id": {
-                        "description": "Optional user identifier for access control. Highly recommended to include!",
+                        "description": "Optional user identifier for multi-accounting detection. Highly recommended to include.",
                         "type": "string"
                     },
                     "email": {
@@ -272,76 +272,158 @@
                         "format": "email"
                     },
                     "phone_number": {
-                        "description": "Optional user phone number. Response will include phone risk assessment.",
+                        "description": "Optional user phone number in E.164 format. Response will include phone validation.",
                         "type": "string"
                     }
                 }
             },
             "VerdictResponse": {
-            "type": "object",
-            "properties": {
-                "success": { "type": "boolean" },
-                "verdict": {
                 "type": "object",
                 "properties": {
-                    "can_pass": { "type": "boolean" }
+                    "success": { "type": "boolean" },
+                    "user_id": {
+                        "type": "string",
+                        "description": "Echo of the user identifier passed in the request."
+                    },
+                    "score": {
+                        "type": "integer",
+                        "description": "Bot detection score from 0 (bot) to 100 (human)."
+                    },
+                    "verdict": {
+                        "type": "object",
+                        "properties": {
+                            "can_pass": { "type": "boolean", "description": "Whether the request should be allowed." },
+                            "redeemed": {
+                                "type": "boolean",
+                                "description": "True if the token had already been redeemed before this call. First call always returns false; subsequent calls with the same token return true. Use this to detect token replay."
+                            }
+                        }
+                    },
+                    "device": {
+                        "type": "object",
+                        "properties": {
+                            "fingerprint": { "type": "string", "description": "Device fingerprint hash derived from canvas, audio, and font signals." },
+                            "user_agent": { "type": "string" },
+                            "browser": { "type": "string", "description": "Detected browser brand (e.g. chrome, firefox, edge, safari)." },
+                            "languages": { "type": "string" },
+                            "timezone": { "type": "string" },
+                            "os": { "type": "string", "description": "Detected operating system (e.g. windows, macos, android, ios, linux)." },
+                            "is_mobile": { "type": "boolean" }
+                        }
+                    },
+                    "ip": {
+                        "type": "object",
+                        "properties": {
+                            "address": { "type": "string" },
+                            "type": { "type": "string", "description": "IP version (ipv4 or ipv6)." },
+                            "is_datacenter": { "type": "boolean" },
+                            "is_proxy": { "type": "boolean" },
+                            "is_tor": { "type": "boolean" },
+                            "is_vpn": { "type": "boolean" },
+                            "is_threat": { "type": "boolean" },
+                            "is_bogon": { "type": "boolean" },
+                            "asn": { "type": "string", "description": "ASN organization name." },
+                            "asn_number": { "type": "integer" }
+                        }
+                    },
+                    "location": {
+                        "type": "object",
+                        "properties": {
+                            "city": { "type": "string" },
+                            "postal_code": { "type": "string" },
+                            "country": { "type": "string", "description": "ISO 3166-1 alpha-2 country code." },
+                            "continent": { "type": "string", "description": "Two-letter continent code." },
+                            "latitude": { "type": "number" },
+                            "longitude": { "type": "number" }
+                        }
+                    },
+                    "email": {
+                        "type": "object",
+                        "description": "Included when an email address is passed in the request.",
+                        "properties": {
+                            "address": { "type": "string", "description": "The email address as provided." },
+                            "normalized": { "type": "string", "description": "Normalized form with aliases resolved (e.g. Gmail dots removed)." },
+                            "valid": { "type": "boolean", "description": "Whether the email address is syntactically and domain-level valid." },
+                            "trust_score": { "type": "number", "description": "Trust score from 0 (untrusted) to 1 (trusted)." },
+                            "domain_name": { "type": "string" },
+                            "domain_type": { "type": "string", "description": "Domain classification: free, disposable, corporate, or unknown." },
+                            "flags": {
+                                "type": "array",
+                                "items": { "type": "string" },
+                                "description": "Additional flags such as aliased, alias, or public_inbox."
+                            }
+                        }
+                    },
+                    "phone": {
+                        "type": "object",
+                        "description": "Included when a phone number is passed in the request.",
+                        "properties": {
+                            "valid": { "type": "boolean", "description": "Whether the phone number is valid." },
+                            "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2 country code." },
+                            "country_name": { "type": "string" },
+                            "carrier": { "type": "string" },
+                            "line_type": { "type": "string", "description": "Line type such as mobile, fixed_line, voip, or toll_free." }
+                        }
+                    },
+                    "session": {
+                        "type": "object",
+                        "properties": {
+                            "started_at": { "type": "string", "format": "date-time" },
+                            "finished_at": { "type": "string", "format": "date-time" }
+                        }
+                    },
+                    "rules": {
+                        "type": "array",
+                        "description": "Bot rules and access rules that matched this request.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "action": { "type": "string", "description": "Rule action (e.g. block, allow, shadow)." },
+                                "name": { "type": "string" },
+                                "id": { "type": "string" },
+                                "source": { "type": "string", "description": "Rule source (e.g. bot_rule, access_rule, list)." },
+                                "shadow": { "type": "boolean", "description": "If true, the rule matched but is in shadow/monitor mode." }
+                            }
+                        }
+                    },
+                    "multi_accounting": {
+                        "type": "object",
+                        "description": "Multi-accounting detection results. Requires a user id in the request.",
+                        "properties": {
+                            "detected": { "type": "boolean", "description": "Whether linked accounts were found." },
+                            "risk": { "type": "string", "description": "Risk level: none, low, medium, or high." },
+                            "score": { "type": "integer", "description": "Highest confidence score across linked accounts (0-100)." },
+                            "accounts": {
+                                "type": "array",
+                                "description": "Linked accounts sharing signals with this user.",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "user_id": { "type": "string" },
+                                        "email": { "type": "string" },
+                                        "signals": {
+                                            "type": "array",
+                                            "items": { "type": "string" },
+                                            "description": "Shared signals (e.g. device_id, ip, email, email_domain)."
+                                        },
+                                        "confidence": { "type": "integer", "description": "Confidence score 0-100 for this linked account." },
+                                        "session_count": { "type": "integer", "description": "Number of sessions from this linked account." },
+                                        "last_activity": { "type": "string", "format": "date-time" }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                },
-                "device": {
-                "type": "object",
-                "properties": {
-                    "fingerprint": { "type": "string" },
-                    "user_agent": { "type": "string" },
-                    "languages": { "type": "string" },
-                    "timezone": { "type": "string" },
-                    "os": { "type": "string" },
-                    "is_mobile": { "type": "boolean" }
-                }
-                },
-                "ip": {
-                "type": "object",
-                "properties": {
-                    "address": { "type": "string" },
-                    "type": { "type": "string" },
-                    "is_datacenter": { "type": "boolean" },
-                    "is_proxy": { "type": "boolean" },
-                    "is_tor": { "type": "boolean" },
-                    "is_vpn": { "type": "boolean" },
-                    "is_threat": { "type": "boolean" },
-                    "is_bogon": { "type": "boolean" },
-                    "asn": { "type": "string" },
-                    "asn_number": { "type": "integer" }
-                }
-                },
-                "location": {
-                "type": "object",
-                "properties": {
-                    "city": { "type": "string" },
-                    "postal_code": { "type": "string" },
-                    "country": { "type": "string" },
-                    "continent": { "type": "string" },
-                    "latitude": { "type": "number" },
-                    "longitude": { "type": "number" }
-                }
-                },
-                "session": {
-                "type": "object",
-                "properties": {
-                    "started_at": { "type": "string", "format": "date-time" },
-                    "finished_at": { "type": "string", "format": "date-time" }
-                }
-                }
-            },
-            "required": []
             },
 
             "UnauthorizedError": {
-            "type": "object",
-            "properties": {
-                "success": { "type": "boolean", "example": false },
-                "message": { "type": "string", "example": "invalid_token" }
-            },
-            "required": ["success", "message"]
+                "type": "object",
+                "properties": {
+                    "success": { "type": "boolean", "example": false },
+                    "message": { "type": "string", "example": "invalid_token" }
+                },
+                "required": ["success", "message"]
             },
 
             "Error": {
